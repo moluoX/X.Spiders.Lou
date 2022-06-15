@@ -1,0 +1,46 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Fetch Data</PageTitle>
+
+@using X.Spiders.Lou.Data
+@using X.Spiders.Lou.Domain.Spiders
+@using X.Spiders.Lou.Domain.Utils
+@inject Spider Spider
+
+<h1>Fetch Data</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>LouDong</th>
+                <th>TaoFangs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var louPan in Spider.Context.LouPans)
+            {
+                @foreach (var louDong in louPan.LouDongs)
+                {
+                    <tr>
+                        <td>@louPan.Id</td>
+                        <td>@louPan.Name</td>
+                        <td>@louDong.DongNo</td>
+                        <td>@louDong.TaoFangs.Count()</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Spider.RunAsync();
+    }
+}

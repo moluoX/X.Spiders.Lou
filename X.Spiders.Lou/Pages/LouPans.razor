@@ -1,0 +1,55 @@
+﻿@page "/LouPans"
+
+<PageTitle>LouPans</PageTitle>
+
+@using Microsoft.EntityFrameworkCore
+@using X.Spiders.Lou.Data
+@using X.Spiders.Lou.Data.Models
+@using X.Spiders.Lou.Domain.Spiders
+@inject SpiderDbContext Db
+
+<h3>LouPans</h3>
+
+@if (models == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>LouDong</th>
+                <th>TaoFangs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var louPan in models)
+            {
+                @foreach (var louDong in louPan.LouDongs)
+                {
+                    <tr>
+                        <td>@louPan.Id</td>
+                        <td>@louPan.Name</td>
+                        <td>@louDong.DongNo</td>
+                        <td>@louDong.TaoFangs.Count()</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    IList<LouPan> models = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        models = await Db.LouPans
+            .Include(x => x.LouDongs)
+            .ThenInclude(x => x.TaoFangs)
+            .Where(x => !x.IsDeleted).ToListAsync();
+    }
+}
