@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,6 +53,26 @@ namespace X.Spiders.Lou.Domain.Utils
                 }
             }
             return bs.Any() ? Encoding.BigEndianUnicode.GetString(bs.ToArray()) : "";
+        }
+    }
+
+    public static class FuncExtension
+    {
+        public static T WithRetry<T>(this Func<T> func, int times = 10, ILogger? logger = null)
+        {
+            while (--times > 0)
+            {
+                try
+                {
+                    return func();
+                }
+                catch (Exception ex)
+                {
+                    if (logger != null)
+                        logger.LogError(ex, "[FuncExtension.WithRetry]");
+                }
+            }
+            return func();
         }
     }
 }

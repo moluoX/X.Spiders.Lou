@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using X.Spiders.Lou.Data.Models;
+using X.Spiders.Lou.Domain.Utils;
 
 namespace X.Spiders.Lou.Domain.Spiders
 {
@@ -51,7 +52,9 @@ namespace X.Spiders.Lou.Domain.Spiders
             var content = new StringContent(
                 string.Format(context.Configs["TaoFangBody"], louDong.FangLinkKey1, louDong.FangLinkKey2),
                 Encoding.UTF8, "application/x-www-form-urlencoded");
-            var response = await _httpClient.PostAsync(uri, content);
+            //var response = await _httpClient.PostAsync(uri, content);
+            var response = new Func<HttpResponseMessage>(() => _httpClient.PostAsync(uri, content).Result).WithRetry();
+
             if (!response.IsSuccessStatusCode) return;
 
             await _parser.ParseTaoFang(louDong, await response.Content.ReadAsStringAsync());

@@ -53,6 +53,8 @@ namespace X.Spiders.Lou.Data.Models
         public DateTime? CompleteDate { get; set; }
         [MaxLength(500)]
         public string? Description { get; set; }
+        [MaxLength(50)]
+        public string? NewName { get; set; }
 
         public IList<LouDong> LouDongs { get; set; } = new List<LouDong>();
     }

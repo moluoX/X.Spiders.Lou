@@ -19,37 +19,48 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
+                <th>NewName</th>
                 <th>LouDong</th>
                 <th>TaoFangs</th>
+                <th>SaledCount</th>
+                <th>SalingCount</th>
+                <th>SaledRate</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var louPan in models)
+            @foreach (var model in models)
             {
-                @foreach (var louDong in louPan.LouDongs)
-                {
-                    <tr>
-                        <td>@louPan.Id</td>
-                        <td>@louPan.Name</td>
-                        <td>@louDong.DongNo</td>
-                        <td>@louDong.TaoFangs.Count()</td>
-                    </tr>
-                }
+                <tr>
+                    <td>@model.Name</td>
+                    <td>@model.NewName</td>
+                    <td>@model.DongNo</td>
+                    <td>@model.TaoFangCount</td>
+                    <td>@model.SaledCount</td>
+                    <td>@model.SalingCount</td>
+                    <td>@(model.TaoFangCount==0?"-":((decimal)model.SaledCount/model.TaoFangCount).ToString("#0.00%"))</td>
+                </tr>
             }
         </tbody>
     </table>
 }
 
 @code {
-    IList<LouPan> models = null;
+    dynamic models = null;
 
     protected override async Task OnInitializedAsync()
     {
-        models = await Db.LouPans
-            .Include(x => x.LouDongs)
-            .ThenInclude(x => x.TaoFangs)
-            .Where(x => !x.IsDeleted).ToListAsync();
+        models = await (from x in Db.LouDongs
+                        where x.LouPan != null && !x.LouPan.IsDeleted
+                        orderby x.LouPan.Id, x.Id
+                        select new
+                        {
+                            x.LouPan.Name,
+                            x.LouPan.NewName,
+                            x.DongNo,
+                            TaoFangCount = x.TaoFangs.Count(y => y.Usage.Contains("住宅")),
+                            SaledCount = x.TaoFangs.Count(y => y.Usage.Contains("住宅") && y.SaleStatus == "已售"),
+                            SalingCount = x.TaoFangs.Count(y => y.Usage.Contains("住宅") && y.SaleStatus == "可售"),
+                        }).ToListAsync();
     }
 }
