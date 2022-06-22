@@ -25,6 +25,7 @@ namespace X.Spiders.Lou.Domain.Spiders
         {
             if (IS_RUNNING) return;
             IS_RUNNING = true;
+            Console.WriteLine($"[Spider.RunAsync] started");
 
             try
             {
@@ -33,12 +34,16 @@ namespace X.Spiders.Lou.Domain.Spiders
                 var louPans = _db.LouPans.Where(x => !x.IsDeleted);
                 foreach (var louPan in louPans)
                 {
+                    Console.WriteLine($"[Spider.RunAsync] {louPan.NewName} started");
                     await _crawler.CrawlLouPan(Context, louPan);
+                    Console.WriteLine($"[Spider.RunAsync] {louPan.NewName} completd");
                 }
+                Console.WriteLine($"[Spider.RunAsync] completd");
             }
             finally
             {
                 IS_RUNNING = false;
+                Console.WriteLine($"[Spider.RunAsync] finally");
             }
         }
     }
