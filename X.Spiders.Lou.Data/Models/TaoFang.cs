@@ -28,6 +28,7 @@ namespace X.Spiders.Lou.Data.Models
         public decimal? GongTanArea { get; set; }
         [MaxLength(50)]
         public string? SaleStatus { get; set; }
+        public DateTime? SaleStatusChangeTime { get; set; }
 
         public LouDong? LouDong { get; set; }
     }

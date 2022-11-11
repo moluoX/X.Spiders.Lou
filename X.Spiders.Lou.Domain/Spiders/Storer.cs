@@ -41,9 +41,18 @@ namespace X.Spiders.Lou.Domain.Spiders
         {
             foreach (TaoFang taoFang in taoFangs)
             {
+                if (taoFang.Usage != "住宅") continue;
+
                 taoFang.LastModifiedTime = DateTime.Now;
-                if (_db.TaoFangs.Any(x => x.Id == taoFang.Id))
-                    _db.TaoFangs.Update(taoFang);
+                var oldSaleStatus = _db.TaoFangs.Where(x => x.Id == taoFang.Id).Select(x => x.SaleStatus).ToList();
+                if (oldSaleStatus.Any())
+                {
+                    if (oldSaleStatus[0] != taoFang.SaleStatus)
+                    {
+                        taoFang.SaleStatusChangeTime = DateTime.Now;
+                        _db.TaoFangs.Update(taoFang);
+                    }
+                }
                 else
                     _db.TaoFangs.Add(taoFang);
             }
