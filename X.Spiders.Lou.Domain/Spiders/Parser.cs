@@ -85,14 +85,15 @@ namespace X.Spiders.Lou.Domain.Spiders
             return $"{arr[0].Trim('\'')}_{arr[1]}";
         }
 
-        public async Task ParseTaoFang(LouDong louDong, string source)
+        public async Task<IList<TaoFang>> ParseTaoFang(LouDong louDong, string source)
         {
             source = $"<table>{source.Trim('"').Replace(@"\/", "/")}</table>";
             IBrowsingContext context = BrowsingContext.New(Configuration.Default);
             IDocument document = await context.OpenAsync(req => req.Content(source));
 
+            var taoFangs = new List<TaoFang>();
             var table = document.QuerySelector<AngleSharp.Html.Dom.IHtmlTableElement>("table");
-            if (table == null) return;
+            if (table == null) return taoFangs;
 
             foreach (var row in table.Rows)
             {
@@ -109,8 +110,9 @@ namespace X.Spiders.Lou.Domain.Spiders
                 taoFang.SaleStatus = row.Cells[7].Text().XFromUtf16Str();
 
                 taoFang.LouDong = louDong;
-                louDong.TaoFangs.Add(taoFang);
+                taoFangs.Add(taoFang);
             }
+            return taoFangs;
         }
     }
 }

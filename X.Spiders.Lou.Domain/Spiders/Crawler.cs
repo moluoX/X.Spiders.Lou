@@ -57,8 +57,8 @@ namespace X.Spiders.Lou.Domain.Spiders
 
             if (!response.IsSuccessStatusCode) return;
 
-            await _parser.ParseTaoFang(louDong, await response.Content.ReadAsStringAsync());
-            await _storer.StoreTaoFang(louDong.TaoFangs);
+            var taoFangs = await _parser.ParseTaoFang(louDong, await response.Content.ReadAsStringAsync());
+            await _storer.StoreTaoFang(taoFangs);
 
             context.LouPans.First(x => x.Id == louDong.LouPan.Id)
                 .LouDongs.First(x => x.Id == louDong.Id)
