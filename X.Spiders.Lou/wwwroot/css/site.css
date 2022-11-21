@@ -62,3 +62,27 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.floornum {
+    height: 20px;
+    width: 40px;
+    font-size: 14px;
+}
+
+.taofang {
+    height: 20px;
+    width: 60px;
+    font-size: 14px;
+}
+
+.unsold {
+}
+
+.returns {
+}
+
+.sold {
+}
+
+.sold0 {
+}

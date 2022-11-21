@@ -1,0 +1,55 @@
+﻿@page "/TaoFangs"
+
+<PageTitle>TaoFangs</PageTitle>
+
+@using Microsoft.EntityFrameworkCore
+@using X.Spiders.Lou.Data
+@using X.Spiders.Lou.Data.Models
+@using X.Spiders.Lou.Domain.Spiders
+@inject SpiderDbContext Db
+
+<h3>LouPans</h3>
+
+@if (louDongs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div style="display:flex;">
+        @foreach (var louDong in louDongs)
+        {
+            <div><span>@louDong.DongNo</span></div>
+            <div>
+                <table class="table" style="width:auto;">
+                    <tbody>
+                        @foreach (var taoFangGroup in louDong.TaoFangs.GroupBy(x => x.Floor).OrderByDescending(x => x.Key))
+                        {
+                            <tr>
+                                <td class="floornum">@taoFangGroup.Key</td>
+                                @foreach (var taoFang in taoFangGroup)
+                                {
+                                    <td class="taofang @taoFang.CalCssClass()" style="background-color:@taoFang.CalColor();color:white;">@(taoFang.SaleStatusChangeTime.HasValue ? $"{taoFang.SaleStatusChangeTime.Value.ToString("MM-dd")}" : Math.Round(taoFang.BuildingArea ?? 0))</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div><span>@louDong.DongNo</span></div>
+        }
+    </div>
+}
+
+@code {
+    IList<LouDong> louDongs = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        louDongs = await (from x in Db.LouDongs.Include(x => x.TaoFangs)
+                          where x.LouPan.NewName == "中海星樾府"
+                          orderby x.DongNo
+                          select x).ToListAsync();
+    }
+}
+

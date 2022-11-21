@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Spiders.Lou", "X.Spiders.Lou\X.Spiders.Lou.csproj", "{3C2EA650-3586-4AA6-BBDB-CC6A1D7826B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "X.Spiders.Lou", "X.Spiders.Lou\X.Spiders.Lou.csproj", "{3C2EA650-3586-4AA6-BBDB-CC6A1D7826B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Spiders.Lou.Data", "X.Spiders.Lou.Data\X.Spiders.Lou.Data.csproj", "{187C716C-C04A-4B7A-A6C5-D404A502A218}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "X.Spiders.Lou.Data", "X.Spiders.Lou.Data\X.Spiders.Lou.Data.csproj", "{187C716C-C04A-4B7A-A6C5-D404A502A218}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Spiders.Lou.Domain", "X.Spiders.Lou.Domain\X.Spiders.Lou.Domain.csproj", "{6C3B346B-757E-4020-A0DC-A94BBD054FF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "X.Spiders.Lou.Domain", "X.Spiders.Lou.Domain\X.Spiders.Lou.Domain.csproj", "{6C3B346B-757E-4020-A0DC-A94BBD054FF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

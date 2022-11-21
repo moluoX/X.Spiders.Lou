@@ -31,5 +31,31 @@ namespace X.Spiders.Lou.Data.Models
         public DateTime? SaleStatusChangeTime { get; set; }
 
         public LouDong? LouDong { get; set; }
+
+        public string CalCssClass()
+        {
+            if (SaleStatus == "已售")
+            {
+                if (SaleStatusChangeTime == null) return "sold";
+                var days = (DateTime.Now.Date - SaleStatusChangeTime.Value.Date).Days;
+                return days <= 30 ? $"sold{days}" : "sold";
+            }
+            else
+                return SaleStatusChangeTime == null ? "unsold" : "returns";
+        }
+
+        public string CalColor()
+        {
+            if (SaleStatus == "已售")
+            {
+                if (SaleStatusChangeTime == null) return "cornflowerblue";
+                var days = (DateTime.Now.Date - SaleStatusChangeTime.Value.Date).Days;
+                if (days > 30) return "cornflowerblue";
+                var gb = (days * 7).ToString("X2");
+                return $"#ff{gb}{gb}";
+            }
+            else
+                return SaleStatusChangeTime == null ? "darkgray" : "lightgreen";
+        }
     }
 }
