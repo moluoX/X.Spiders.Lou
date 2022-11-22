@@ -8,7 +8,7 @@
 @using X.Spiders.Lou.Domain.Spiders
 @inject SpiderDbContext Db
 
-<h3>LouPans</h3>
+<h3>TaoFangs</h3>
 
 @if (louDongs == null)
 {
@@ -19,9 +19,9 @@ else
     <div style="display:flex;">
         @foreach (var louDong in louDongs)
         {
-            <div><span>@louDong.DongNo</span></div>
-            <div>
-                <table class="table" style="width:auto;">
+            <div style="margin:10px;text-align:center;">
+                <span class="badge bg-success">@louDong.DongNo</span>
+                <table class="table" style="width:auto;margin:5px;">
                     <tbody>
                         @foreach (var taoFangGroup in louDong.TaoFangs.GroupBy(x => x.Floor).OrderByDescending(x => x.Key))
                         {
@@ -35,8 +35,8 @@ else
                         }
                     </tbody>
                 </table>
+                <span class="badge bg-success">@louDong.DongNo</span>
             </div>
-            <div><span>@louDong.DongNo</span></div>
         }
     </div>
 }

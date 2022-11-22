@@ -51,7 +51,7 @@ namespace X.Spiders.Lou.Data.Models
                 if (SaleStatusChangeTime == null) return "cornflowerblue";
                 var days = (DateTime.Now.Date - SaleStatusChangeTime.Value.Date).Days;
                 if (days > 30) return "cornflowerblue";
-                var gb = (days * 7).ToString("X2");
+                var gb = ((int)Math.Round(Math.Sqrt(days)) * 40).ToString("X2");
                 return $"#ff{gb}{gb}";
             }
             else
