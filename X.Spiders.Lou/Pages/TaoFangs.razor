@@ -47,7 +47,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         louDongs = await (from x in Db.LouDongs.Include(x => x.TaoFangs)
-                          where x.LouPan.NewName == "中海星樾府"
+                          where x.LouPan.NewName.Contains("中海星樾府")
                           orderby x.DongNo
                           select x).ToListAsync();
     }
