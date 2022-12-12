@@ -10,46 +10,70 @@
 
 <h3>TaoFangs</h3>
 
-@if (louDongs == null)
+@if (louPanNames == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    <div>
+        <select @onchange="ListLouDongs">
+            <option value="">--请选择--</option>
+            @foreach (var louPanName in louPanNames)
+            {
+                <option value="@louPanName">@louPanName</option>
+            }
+        </select>
+    </div>
     <div style="display:flex;">
-        @foreach (var louDong in louDongs)
+        @if (louDongs != null && louDongs.Any())
         {
-            <div style="margin:10px;text-align:center;">
-                <span class="badge bg-success">@louDong.DongNo</span>
-                <table class="table" style="width:auto;margin:5px;">
-                    <tbody>
-                        @foreach (var taoFangGroup in louDong.TaoFangs.GroupBy(x => x.Floor).OrderByDescending(x => x.Key))
-                        {
-                            <tr>
-                                <td class="floornum">@taoFangGroup.Key</td>
-                                @foreach (var taoFang in taoFangGroup)
-                                {
-                                    <td class="taofang @taoFang.CalCssClass()" style="background-color:@taoFang.CalColor();color:white;">@(taoFang.SaleStatusChangeTime.HasValue ? $"{taoFang.SaleStatusChangeTime.Value.ToString("MM-dd")}" : Math.Round(taoFang.BuildingArea ?? 0))</td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <span class="badge bg-success">@louDong.DongNo</span>
-            </div>
+            @foreach (var louDong in louDongs)
+            {
+                <div style="margin:10px;text-align:center;">
+                    <span class="badge bg-success">@louDong.DongNo (@louDong.FaZhengDate?.ToString("yyyy-MM-dd"))</span>
+                    <table class="table" style="width:auto;margin:5px;">
+                        <tbody>
+                            @foreach (var taoFangGroup in louDong.TaoFangs.GroupBy(x => x.Floor).OrderByDescending(x => x.Key))
+                            {
+                                <tr>
+                                    <td class="floornum">@taoFangGroup.Key</td>
+                                    @foreach (var taoFang in taoFangGroup)
+                                    {
+                                        <td class="taofang @taoFang.CalCssClass()" style="background-color:@taoFang.CalColor();color:white;">
+                                            @(taoFang.SaleStatusChangeTime.HasValue ? $"{taoFang.SaleStatusChangeTime.Value.ToString("MM-dd")}" : Math.Round(taoFang.BuildingArea ?? 0))
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <span class="badge bg-success">@louDong.DongNo (@louDong.FaZhengDate?.ToString("yyyy-MM-dd"))</span>
+                </div>
+            }
         }
     </div>
 }
 
 @code {
-    IList<LouDong> louDongs = null;
+    IList<string>? louPanNames = null;
+    IList<LouDong>? louDongs = null;
 
     protected override async Task OnInitializedAsync()
     {
-        louDongs = await (from x in Db.LouDongs.Include(x => x.TaoFangs)
-                          where x.LouPan.NewName.Contains("中海星樾府")
-                          orderby x.DongNo
-                          select x).ToListAsync();
+        louPanNames = await (from x in Db.LouPans.AsNoTracking() select x.NewName).ToListAsync();
+    }
+
+    private async Task ListLouDongs(ChangeEventArgs e)
+    {
+        var louPanName = e.Value as string;
+        if (string.IsNullOrWhiteSpace(louPanName))
+            louDongs = null;
+        else
+            louDongs = await (from x in Db.LouDongs.Include(x => x.TaoFangs).AsNoTracking()
+                              where x.LouPan.NewName == louPanName
+                              orderby x.FaZhengDate, x.DongNo
+                              select x).ToListAsync();
     }
 }
 
